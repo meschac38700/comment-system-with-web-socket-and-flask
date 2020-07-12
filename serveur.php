@@ -5,7 +5,7 @@ class BDD
     
     public function __construct()
     {
-        $this->pdo = new PDO("sqlite:../bdd.db");
+        $this->pdo = new PDO("sqlite:bdd.db");
     }
 
     /**
@@ -58,7 +58,6 @@ class BDD
     }
 }
 $pdo = new BDD();
-//var_dump($pdo->createTableComment());
 $result = $pdo->select("SELECT * FROM Comments;");
 header("content-Type: application/json");
 echo (json_encode($result));
