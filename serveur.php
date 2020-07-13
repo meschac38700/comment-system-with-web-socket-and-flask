@@ -34,17 +34,6 @@ class BDD
         return $results->fetchAll();
     }
 
-    public function prepare_select($request, $data)
-    {
-        $statement = $this->pdo->prepare($request);
-        foreach($data as $key => $value)
-        {
-            $statement->bindValue(':'.$key, $value);
-        }
-        $results = $statement->execute();
-        return $results->fetchArray();
-    }
-
     // source code http://www.sqlitetutorial.net/sqlite-php/insert/
     public function prepare_insert( $request, $data ) {
         
