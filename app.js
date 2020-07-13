@@ -256,7 +256,7 @@ add_parent_comment.addEventListener("submit", (e)=>
             likes=0,
             added_since=(new Date()).toLocaleString("fr-FR"),
             id=`#comment_${(new Date()).getTime()}`);
-        document.querySelector(".container .content").appendChild(c);
+        document.querySelector(".container .content form.add_parent_comment").after(c);
         el.value = "";
         // TODO INSERT INTO DATABASE THE CURRENT COMMENT CHILD
     }
@@ -273,7 +273,7 @@ function add_child_comment(el)
             likes=0,
             added_since=(new Date()).toLocaleString("fr-FR"),
             id = null );
-        parent_el.appendChild(c);
+        parent_el.prepend(c);
         hide_or_add_show_children_btn(parent_el.parentElement);
         el.value = "";
         // TODO INSERT INTO DATABASE THE CURRENT COMMENT CHILD
