@@ -335,7 +335,7 @@ function hide_show_child_comment_text(el)
     if(node.classList.contains("show"))
         target_node.innerText = "Masquer les réponses";
     else
-        target_node.innerText = "afficher les réponses";
+        target_node.innerText = "Afficher les réponses";
 }
 
 customElements.define("comment-element", Comment)
