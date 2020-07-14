@@ -261,6 +261,7 @@ html, body
 {
     display: flex;
     flex-direction: column;
+    flex-wrap: wrap;
     color: var(--content-secondary-color);
 }
 .comment .comment_content_footer >*
@@ -324,25 +325,24 @@ html, body
     font-size: 12px;
     min-height: 20px;
 }
-@media only screen and (max-width: 670px)
+@media only screen and (max-width: 650px)
 {
-    .comment_actions.comment_show_children_action span
+    .comment_actions:not(.comment_vote_action) span
     {
         display: none;
+    }
+    .main{
+        padding: 0;
     }
 }
 @media only screen and (max-width: 550px)
 {
-    .main,
-    .content{
-        padding: 0;
-    }
     .container
     {
         padding: 0 .8em;
     }
     .comment .comment_container > .comments_children_container
     {
-        padding-left: .4em;
+        padding-left: .8em;
     }
 }
