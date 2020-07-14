@@ -216,14 +216,14 @@ html, body
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
 }
-.comment .comment_container > .comments_children_container
+.comment_element .comment_container >  .comments_children_container
 {
     padding-left: 1em;
     height: 0;
     overflow: hidden;
     transition: .5s height;
 }
-.comment .comment_container > .comments_children_container.show
+.comment_element.show .comment_container >  .comments_children_container
 {
     height: auto;
 }
@@ -282,13 +282,23 @@ html, body
 {
     color: var(--content-primary-color);
 }
-.comment .comment_content_footer .form
+.comment_element svg.hide,
+.comment_element.show svg.show
+{
+    display: none;
+}
+.comment_element.show svg.hide,
+.comment_element svg.show
+{
+    display: inline-block;
+}
+.comment_element .comment_content_footer .form
 {
     height: 0;
     overflow:hidden;
     transition: .5s height;
 }
-.comment .comment_content_footer .form.show
+.comment_element.show .comment_content_footer .form
 {
     height: 60px;
 }
