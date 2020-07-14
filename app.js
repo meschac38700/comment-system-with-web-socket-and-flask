@@ -1,3 +1,5 @@
+Date.prototype.addDays=function(d){return new Date(this.valueOf()+864E5*d);};
+Date.prototype.removeDays=function(d){return new Date(this.valueOf()-864E5*d);};
 const ACTION_COMMENT = {
     comment_to_delete: null
 }
@@ -243,18 +245,23 @@ function hide_or_add_show_children_btn(parent_comment=null)
         })
     }
 }
+
 let add_parent_comment = document.querySelector("form.add_parent_comment");
 add_parent_comment.addEventListener("submit", (e)=>
 {
     e.preventDefault();
-    let el = add_parent_comment.querySelector(".new_parent_comment");
+    // TODO Only for dev env
+    let r_nb =  Math.floor(Math.random() * 10) + 1;
+    let random_since_date =moment((new Date()).removeDays(r_nb)).locale('fr').fromNow();
+
+    let el = add_parent_comment.querySelector(".new_parent_comment") 
     if(el.value.trim() != "")
     {
         let c = new Comment(
             owner= "John DOE",
             content=el.value,
             likes=0,
-            added_since=(new Date()).toLocaleString("fr-FR"),
+            added_since=random_since_date,
             id=`#comment_${(new Date()).getTime()}`);
         document.querySelector(".container .content form.add_parent_comment").after(c);
         el.value = "";
@@ -264,6 +271,10 @@ add_parent_comment.addEventListener("submit", (e)=>
 
 function add_child_comment(el)
 {
+    // TODO Only for dev env
+    let r_nb =  Math.floor(Math.random() * 10) + 1;
+    let random_since_date =moment((new Date()).removeDays(r_nb)).locale('fr').fromNow();
+    
     if(el.value.trim() !== "")
     {
         let parent_el = this.get_parent_comment(el).querySelector(".comments_children_container");
@@ -271,7 +282,7 @@ function add_child_comment(el)
             owner= "Marc DOE",
             content=el.value,
             likes=0,
-            added_since=(new Date()).toLocaleString("fr-FR"),
+            added_since=random_since_date,
             id = null );
         parent_el.prepend(c);
         hide_or_add_show_children_btn(parent_el.parentElement);
