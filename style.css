@@ -298,7 +298,7 @@ html, body
     overflow:hidden;
     transition: .5s height;
 }
-.comment_element.show .comment_content_footer .form
+.comment_element .comment_content_footer .form.show
 {
     height: 60px;
 }
