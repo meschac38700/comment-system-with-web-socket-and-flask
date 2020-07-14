@@ -267,10 +267,6 @@ html, body
     align-items: center;
     cursor: pointer;
 }
-.comment .comment_content_footer >*:not(:last-child)
-{
-    margin-right: 1em;
-}
 .comment .comment_content_footer >* .icon
 {
     margin-right: 4px;
@@ -315,4 +311,26 @@ html, body
     height: 40px;
     font-size: 12px;
     min-height: 20px;
+}
+@media only screen and (max-width: 670px)
+{
+    .comment_actions.comment_show_children_action span
+    {
+        display: none;
+    }
+}
+@media only screen and (max-width: 550px)
+{
+    .main,
+    .content{
+        padding: 0;
+    }
+    .container
+    {
+        padding: 0 .8em;
+    }
+    .comment .comment_container > .comments_children_container
+    {
+        padding-left: .4em;
+    }
 }
