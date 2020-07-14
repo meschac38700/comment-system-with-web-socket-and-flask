@@ -132,22 +132,29 @@ class Comment extends HTMLElement
         let add_comment = document.createElement("DIV");
         add_comment.setAttribute("class", "add_comment");
         add_comment.innerHTML =`<textarea class="new_comment" name="new_comment" id="comment" rows="10" placeholder="Ajouter un commentaire public"></textarea>`;
-        add_comment.addEventListener("keyup", function(e)
+        let new_comment = add_comment.querySelector(".new_comment");
+        new_comment.addEventListener("keyup", function(e)
         {
-            e.preventDefault();
+            if (!((e.ctrlKey  &&  e.keyCode === 13) || (e.shiftKey  &&  e.keyCode === 13)) && e.keyCode === 13)
+            {
+                this.value = "";
+            }
+        });
+        new_comment.addEventListener("keydown", function(e)
+        {
             if (!((e.ctrlKey  &&  e.keyCode === 13) || (e.shiftKey  &&  e.keyCode === 13)) && e.keyCode === 13) {
-                let child_container = get_node(add_comment, "comments_children_container");
-                let new_comment = add_comment.querySelector(".new_comment");
+                let child_container = get_node(this, "comments_children_container");
                 if(!child_container.classList.contains("show"))
                     child_container.classList.add("show");
-                if(new_comment.value.trim() !== "")
+                if(this.value.trim() !== "")
                 {
                     add_comment.parentElement.classList.toggle("show");
-                    add_child_comment( new_comment );
+                    add_child_comment( this );
                     let comment_parent = get_node(this, "comment_element", "comment_child" );
                     if(!comment_parent.classList.contains("show"))
                         comment_parent.classList.add("show")
-                    hide_show_child_comment_text(add_comment)
+                    hide_show_child_comment_text(this)
+                    this.value = "";
                 }
             }
         });
@@ -301,10 +308,9 @@ function add_child_comment(el)
             added_since=random_since_date,
             id = "comment_"+(new Date()).getTime().toString() );
         parent_el.prepend(c);
-        el.value = "";
         hide_or_add_show_children_btn(parent_el.parentElement);
         // TODO INSERT INTO DATABASE THE CURRENT COMMENT CHILD
-    } 
+    }
 }
 /****************  Get parentNode  ****************
  ******************************************************/
