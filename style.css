@@ -47,7 +47,7 @@ html, body
     left: 0;
     transform: translateX( calc(-50% - var(--padding-comment-content) ) );
 }
-.inline_flex_space{display: flex; align-items: center; justify-content: space-between;}
+.inline_flex_space{display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;}
 .main
 {
     padding: 0 calc(var(--padding-comment-content) * 2);
