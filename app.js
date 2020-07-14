@@ -174,21 +174,17 @@ class Comment extends HTMLElement
             this.appendChild(comment_container);
         }
     }
-    has_children()
-    {
-        return this.querySelector(".comments_children_container").childElementCount>0;
-    }
     already_exist(el_selector, search_selector)
     {
         return el_selector.querySelector(search_selector) != null;
     }
     
 }
-function createFooterBtnAction( classes, icon_classes, title, svg, span_classes, span_text, id=null )
+function createFooterBtnAction( classes, icon_classes, title, svg, span_classes, span_text, comment_id=null )
 {
     let el = document.createElement("DIV");
     el.setAttribute("class", classes);
-    if(id) el.setAttribute("data-comment", id);
+    if(comment_id) el.setAttribute("data-comment", comment_id);
     let el_icon = document.createElement("DIV");
     el_icon.setAttribute("class", icon_classes)
     el_icon.setAttribute("title", title)
@@ -279,7 +275,8 @@ add_parent_comment.addEventListener("submit", (e)=>
             content=el.value,
             likes=0,
             added_since=random_since_date,
-            id=`#comment_${(new Date()).getTime()}`);
+            id=`comment_${(new Date()).getTime()}`,
+            isParent=true);
         document.querySelector(".container .content form.add_parent_comment").after(c);
         el.value = "";
         // TODO INSERT INTO DATABASE THE CURRENT COMMENT CHILD
@@ -296,13 +293,13 @@ function add_child_comment(el)
     if(el.value.trim() !== "")
     {
         //let parent_el = this.get_node(el).querySelector(".comments_children_container");
-        let parent_el = this.get_node(el, "comments_children_container");
+        let parent_el = get_node(el, "comments_children_container");
         let c = new Comment(
             owner= "Marc DOE",
             content=el.value,
             likes=0,
             added_since=random_since_date,
-            id = null );
+            id = "comment_"+(new Date()).getTime().toString() );
         parent_el.prepend(c);
         el.value = "";
         hide_or_add_show_children_btn(parent_el.parentElement);
@@ -364,6 +361,5 @@ let c3 = new Comment(
     id="second_comment_marcd_1234",
     isParent=true);
 document.querySelector(".container .content").appendChild(c3);
-
 
 hide_or_add_show_children_btn();
