@@ -254,6 +254,8 @@ html, body
 .comment .comment_content_body{
     margin: 1em 0 2em 0;
     font-weight: 500;
+    word-break: break-all;
+
 }
 .comment .comment_content_footer
 {
