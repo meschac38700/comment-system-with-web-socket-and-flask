@@ -424,7 +424,6 @@ DATA.forEach(comment_data=>
         });
     }
     parent_container.appendChild(parent_c);
-    console.log(parent_c)
     hide_or_add_show_children_btn(parent_c);
 });
 
