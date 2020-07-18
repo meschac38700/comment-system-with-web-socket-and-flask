@@ -1,5 +1,61 @@
 Date.prototype.addDays=function(d){return new Date(this.valueOf()+864E5*d);};
 Date.prototype.removeDays=function(d){return new Date(this.valueOf()-864E5*d);};
+
+const DATA = [
+    {
+        "children": [],
+        "parent": {
+            "author__first_name": "Frederic",
+            "author__username": "doefr",
+            "nbr_vote": 0,
+            "author__last_name": "Doe",
+            "added": "2020-07-15T00:00:00Z",
+            "id": 7,
+            "content": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur ratione omnis alias magnam? Consectetur, dignissimos!"
+        }
+    },
+    {
+        "children": [
+            {
+                "author__first_name": "Aymen",
+                "author__username": "doeay",
+                "nbr_vote": 0,
+                "author__last_name": "Doe",
+                "added": "2020-07-15T14:23:04Z",
+                "id": 4,
+                "content": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur ratione omnis alias magnam?"
+            },
+            {
+                "author__first_name": "Jeremy",
+                "author__username": "doeje",
+                "nbr_vote": 0,
+                "author__last_name": "Doe",
+                "added": "2020-07-16T00:00:00Z",
+                "id": 3,
+                "content": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur ratione omnis alias magnam?"
+            },
+            {
+                "author__first_name": "Thierry",
+                "author__username": "doeth",
+                "nbr_vote": 1,
+                "author__last_name": "Doe",
+                "added": "2020-07-16T00:00:00Z",
+                "id": 8,
+                "content": "Last comment on the first parent comment"
+            }
+        ],
+        "parent": {
+            "author__first_name": "Eliam",
+            "author__username": "doeel",
+            "nbr_vote": 3,
+            "author__last_name": "Doe",
+            "added": "2020-07-15T14:20:46Z",
+            "id": 1,
+            "content": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur ratione omnis alias magnam? Consectetur, dignissimos! Officia debitis iste libero omnis porro facilis architecto! Officia corrupti cum vitae laborum minus exerci"
+        }
+    }
+]
+
 const ACTION_COMMENT = {
     comment_to_delete: null
 }
@@ -271,8 +327,7 @@ add_parent_comment.addEventListener("submit", (e)=>
 {
     e.preventDefault();
     // TODO Only for dev env
-    let r_nb =  Math.floor(Math.random() * 10) + 1;
-    let random_since_date =moment((new Date()).removeDays(r_nb)).locale('fr').fromNow();
+    let random_since_date =moment((new Date())).locale('fr').fromNow();
 
     let el = add_parent_comment.querySelector(".new_parent_comment") 
     if(el.value.trim() != "")
@@ -294,15 +349,14 @@ add_parent_comment.addEventListener("submit", (e)=>
 function add_child_comment(el)
 {
     // TODO Only for dev env
-    let r_nb =  Math.floor(Math.random() * 10) + 1;
-    let random_since_date =moment((new Date()).removeDays(r_nb)).locale('fr').fromNow();
+    let random_since_date =moment((new Date())).locale('fr').fromNow();
     
     if(el.value.trim() !== "")
     {
         //let parent_el = this.get_node(el).querySelector(".comments_children_container");
         let parent_el = get_node(el, "comments_children_container");
         let c = new Comment(
-            owner= "Marc DOE",
+            owner= "John DOE",
             content=el.value,
             likes=0,
             added_since=random_since_date,
@@ -339,33 +393,39 @@ function hide_show_child_comment_text(el)
 }
 
 customElements.define("comment-element", Comment)
-let c = new Comment(
-    owner= "John DOE",
-    content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente, necessitatibus.",
-    likes=5,
-    added_since="Il y a 2 semaines",
-    id="first_comment_johnd_123",
-    isParent=true);
-document.querySelector(".container .content").appendChild(c);
 
-let c2 = new Comment(
-    owner= "Marc DOE",
-    content="Lorem ipsum dolor sit amet consectetur.",
-    likes=10,
-    added_since="Il y a 1 mois",
-    id = "childOffirst_comment_johnd_123");
-
-let children_container = document.querySelector("#first_comment_johnd_123 .comments_children_container");
-children_container.appendChild(c2)
-document.querySelector("#first_comment_johnd_123 .comment_container").appendChild(children_container);
-
-let c3 = new Comment(
-    owner= "Marc DOE",
-    content="Lorem ipsum dolor sit amet consectetur.<br/>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente, necessitatibus.",
-    likes=45,
-    added_since="Il y a 1 minute",
-    id="second_comment_marcd_1234",
-    isParent=true);
-document.querySelector(".container .content").appendChild(c3);
+// Adding data from Server
+DATA.forEach(comment_data=>
+{
+    let parent_container = document.querySelector(".container .content");
+    let children = comment_data.children;
+    let parent = comment_data.parent;
+    let date_added = moment((new Date(parent.added))).locale('fr').fromNow();
+    let parent_c = new Comment(
+        owner= `${parent.author__first_name} ${parent.author__last_name.toUpperCase()}`,
+        content= parent.content,
+        likes=parent.nbr_vote,
+        added_since=date_added,
+        id= "comment_"+(new Date()).getTime().toString(),
+        isParent=true
+    );
+    if(children.length > 0)
+    {
+        children.forEach(child_data=>{
+            date_added = moment((new Date(child_data.added))).locale('fr').fromNow();
+            let child_c = new Comment(
+                owner=  `${child_data.author__first_name} ${child_data.author__last_name.toUpperCase()}`,
+                content=child_data.content,
+                likes=child_data.nbr_vote,
+                added_since=date_added,
+                id = "comment_"+(new Date()).getTime().toString()
+            );
+            parent_c.querySelector(".comments_children_container").prepend(child_c);
+        });
+    }
+    parent_container.appendChild(parent_c);
+    console.log(parent_c)
+    hide_or_add_show_children_btn(parent_c);
+});
 
 hide_or_add_show_children_btn();
