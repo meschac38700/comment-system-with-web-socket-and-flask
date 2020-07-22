@@ -59,6 +59,32 @@ const DATA = [
 const ACTION_COMMENT = {
     comment_to_delete: null
 }
+class AlertMessage extends HTMLElement
+{
+    constructor(message, alert_class="")
+    {
+        super();
+        this.setAttribute('class', "alert "+`alert_${alert_class}`);
+        let html = document.createElement('DIV');
+        html.setAttribute("class", "alert_content");
+        let content = document.createElement('DIV');
+        content.setAttribute('class', 'alert_message');
+        content.textContent = message;
+        html.appendChild(content);
+        this.appendChild(html);
+    }
+    connectedCallback(){
+        super.connectedCallback && super.connectedCallback();
+        window.setTimeout(()=>{
+            this.classList.add('alert_close');
+            window.setTimeout(()=>{
+                this.parentElement.removeChild(this);
+            },1000);
+        }, 3000);
+    }
+}
+customElements.define("alert-message", AlertMessage);
+
 class ConfirmModal extends HTMLElement
 {
     constructor(message=null, delete_text=null, cancel_text=null)
@@ -92,6 +118,7 @@ class ConfirmModal extends HTMLElement
             let parent = ACTION_COMMENT.comment_to_delete.parentElement
             parent.removeChild(ACTION_COMMENT.comment_to_delete);
             ACTION_COMMENT.comment_to_delete = null;
+            document.body.appendChild(new AlertMessage("Message a été supprimé"))
             // remove show children btn if no child in the node
             if(parent.classList.contains("comments_children_container") && parent.childElementCount===0)
             {
