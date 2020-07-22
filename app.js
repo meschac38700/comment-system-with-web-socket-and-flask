@@ -118,7 +118,7 @@ class ConfirmModal extends HTMLElement
             let parent = ACTION_COMMENT.comment_to_delete.parentElement
             parent.removeChild(ACTION_COMMENT.comment_to_delete);
             ACTION_COMMENT.comment_to_delete = null;
-            document.body.appendChild(new AlertMessage("Message a été supprimé"))
+            document.body.appendChild(new AlertMessage("Commentaire a été supprimé"))
             // remove show children btn if no child in the node
             if(parent.classList.contains("comments_children_container") && parent.childElementCount===0)
             {
