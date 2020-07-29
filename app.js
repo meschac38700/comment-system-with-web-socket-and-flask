@@ -113,6 +113,32 @@ class ConfirmModal extends HTMLElement
 }
 customElements.define("confirm-modal", ConfirmModal);
 
+class CommentSince extends HTMLElement
+{
+    static get observedAttributes(){return ['since']}
+    constructor(comment_added)
+    {
+        super();
+        console.log(comment_added)
+        comment_added = this.getAttribute("since")?this.getAttribute("since"): comment_added;
+        console.log(comment_added)
+        comment_added = typeof(comment_added) === "string"? new Date(comment_added) : comment_added;
+        console.log(comment_added)
+        let since = moment(comment_added).locale('fr').fromNow();
+        let div = document.createElement('DIV');
+        div.setAttribute('class', "comment_since");
+        div.innerText = since;
+        this.appendChild(div);
+        window.setInterval(function()
+        {
+            since = moment(comment_added).locale('fr').fromNow();
+            div.innerText = since;
+        }, 60000);
+    }
+}
+
+customElements.define('comment-since', CommentSince)
+
 class Comment extends HTMLElement
 {
     constructor( owner, content, likes, added_since, id, isParent=null)
@@ -124,11 +150,13 @@ class Comment extends HTMLElement
         comment.setAttribute("class", "comment");
         let comment_container = document.createElement("DIV");
         comment_container.setAttribute("class", "comment_container");
+        console.log(added_since)
+        console.log(added_since.toISOString())
         let comment_content = `
             <div class="comment_content">
                 <div class="comment_content_header inline_flex_space">
                     <h1 class="user_name">${owner}</h1>
-                    <div class="comment_since">${added_since}</div>
+                    <comment-since since=${added_since.toISOString()}></comment-since>
                 </div>
                 <div class="comment_content_body">
                     <p>${content}</p>
@@ -327,7 +355,7 @@ add_parent_comment.addEventListener("submit", (e)=>
 {
     e.preventDefault();
     // TODO Only for dev env
-    let random_since_date =moment((new Date())).locale('fr').fromNow();
+    let date_added =new Date();
 
     let el = add_parent_comment.querySelector(".new_parent_comment") 
     if(el.value.trim() != "")
@@ -336,8 +364,8 @@ add_parent_comment.addEventListener("submit", (e)=>
             owner= "John DOE",
             content=el.value,
             likes=0,
-            added_since=random_since_date,
-            id=`comment_${(new Date()).getTime()}`,
+            added_since=date_added,
+            id=`comment_${date_added}`,
             isParent=true);
         document.querySelector(".container .content form.add_parent_comment").after(c);
         el.value = "";
@@ -349,7 +377,7 @@ add_parent_comment.addEventListener("submit", (e)=>
 function add_child_comment(el)
 {
     // TODO Only for dev env
-    let random_since_date =moment((new Date())).locale('fr').fromNow();
+    let date_added =new Date();
     
     if(el.value.trim() !== "")
     {
@@ -359,8 +387,8 @@ function add_child_comment(el)
             owner= "John DOE",
             content=el.value,
             likes=0,
-            added_since=random_since_date,
-            id = "comment_"+(new Date()).getTime().toString() );
+            added_since=date_added,
+            id = `comment_${date_added}`);
         parent_el.prepend(c);
         hide_or_add_show_children_btn(parent_el.parentElement);
         // TODO INSERT INTO DATABASE THE CURRENT COMMENT CHILD
@@ -400,25 +428,25 @@ DATA.forEach(comment_data=>
     let parent_container = document.querySelector(".container .content");
     let children = comment_data.children;
     let parent = comment_data.parent;
-    let date_added = moment((new Date(parent.added))).locale('fr').fromNow();
+    let date_added = new Date(parent.added);
     let parent_c = new Comment(
         owner= `${parent.author__first_name} ${parent.author__last_name.toUpperCase()}`,
         content= parent.content,
         likes=parent.nbr_vote,
         added_since=date_added,
-        id= "comment_"+(new Date()).getTime().toString(),
+        id= `comment_${date_added.getTime().toString()}`,
         isParent=true
     );
     if(children.length > 0)
     {
         children.forEach(child_data=>{
-            date_added = moment((new Date(child_data.added))).locale('fr').fromNow();
+            date_added = new Date(child_data.added);
             let child_c = new Comment(
                 owner=  `${child_data.author__first_name} ${child_data.author__last_name.toUpperCase()}`,
                 content=child_data.content,
                 likes=child_data.nbr_vote,
                 added_since=date_added,
-                id = "comment_"+(new Date()).getTime().toString()
+                id = `comment_${date_added.getTime().toString()}`
             );
             parent_c.querySelector(".comments_children_container").prepend(child_c);
         });
