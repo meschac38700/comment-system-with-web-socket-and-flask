@@ -4,7 +4,7 @@ Système de commentaire utilisant le webSocket sans persistance des données.
 
 # Requirements
 
-Python >= v3
+Python >= v3.9
 
 ## Installation
 
