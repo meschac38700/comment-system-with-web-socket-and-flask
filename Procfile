@@ -1,1 +1,1 @@
-web: gunicorn app.run:socketio --log-file -
+web: gunicorn --worker-class eventlet -w 1 app.run:app  --log-file -
