@@ -1,1 +1,1 @@
-web: gunicorn app:app
+web: gunicorn comment_design.app.app --log-file -
