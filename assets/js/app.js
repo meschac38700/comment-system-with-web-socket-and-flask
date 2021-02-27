@@ -8,7 +8,38 @@ Date.prototype.removeDays = function (d) {
 const socket = io.connect("http://" + location.hostname + ":5000");
 
 socket.on("add_handler_comment", (data) => {
-	console.log("Adding");
+	const date_added = new Date();
+	if (data.is_child) {
+		const el = document
+			.getElementById(data.comment_id)
+			.querySelector("#comment");
+		let parent_el = get_node(el, "comments_children_container");
+		let c = new Comment(
+			(owner = "John DOE"),
+			(content = data.text),
+			(likes = 0),
+			(added_since = date_added),
+			(id = `comment_${date_added.getTime().toString()}`)
+		);
+		c.querySelector(".comment_actions.comment_vote_action").dataset.target =
+			c.id;
+		c.dataset.child = true;
+		parent_el.prepend(c);
+		hide_or_add_show_children_btn(parent_el.parentElement);
+		return;
+	}
+	let c = new Comment(
+		(owner = "John DOE"),
+		(content = data.text),
+		(likes = 0),
+		(added_since = date_added),
+		(id = `comment_${date_added.getTime().toString()}`),
+		(isParent = true)
+	);
+	c.querySelector(".comment_actions.comment_vote_action").dataset.target = c.id;
+	document
+		.querySelector(".container .content form.add_parent_comment")
+		.after(c);
 });
 
 socket.on("vote_handler_comment", (data) => {
@@ -300,7 +331,7 @@ class Comment extends HTMLElement {
 			.appendChild(delete_action);
 		let add_comment = document.createElement("DIV");
 		add_comment.setAttribute("class", "add_comment");
-		add_comment.innerHTML = `<textarea class="new_comment" name="new_comment" id="comment" rows="10" placeholder="Ajouter un commentaire public"></textarea>`;
+		add_comment.innerHTML = `<textarea class="new_comment" name="new_comment" id="comment" rows="10" data-comment=${id} placeholder="Ajouter un commentaire public"></textarea>`;
 		let new_comment = add_comment.querySelector(".new_comment");
 		new_comment.addEventListener("keyup", function (e) {
 			if (
@@ -488,24 +519,9 @@ function hide_or_add_show_children_btn(parent_comment = null) {
 let add_parent_comment = document.querySelector("form.add_parent_comment");
 add_parent_comment.addEventListener("submit", (e) => {
 	e.preventDefault();
-	// TODO Only for dev env
-	let date_added = new Date();
-
 	let el = add_parent_comment.querySelector(".new_parent_comment");
 	if (el.value.trim() != "") {
-		let c = new Comment(
-			(owner = "John DOE"),
-			(content = el.value),
-			(likes = 0),
-			(added_since = date_added),
-			(id = `comment_${date_added.getTime().toString()}`),
-			(isParent = true)
-		);
-		c.querySelector(".comment_actions.comment_vote_action").dataset.target =
-			c.id;
-		document
-			.querySelector(".container .content form.add_parent_comment")
-			.after(c);
+		socket.emit("add comment event", { text: el.value });
 		el.value = "";
 		// TODO INSERT INTO DATABASE THE CURRENT COMMENT CHILD
 	}
@@ -514,24 +530,14 @@ add_parent_comment.addEventListener("submit", (e) => {
  ******************************************************/
 function add_child_comment(el) {
 	// TODO Only for dev env
-	let date_added = new Date();
 
 	if (el.value.trim() !== "") {
-		//let parent_el = this.get_node(el).querySelector(".comments_children_container");
-		let parent_el = get_node(el, "comments_children_container");
-		let c = new Comment(
-			(owner = "John DOE"),
-			(content = el.value),
-			(likes = 0),
-			(added_since = date_added),
-			(id = `comment_${date_added.getTime().toString()}`)
-		);
-		c.querySelector(".comment_actions.comment_vote_action").dataset.target =
-			c.id;
-		child_c.dataset.child = true;
-		parent_el.prepend(c);
-		hide_or_add_show_children_btn(parent_el.parentElement);
-		// TODO INSERT INTO DATABASE THE CURRENT COMMENT CHILD
+		socket.emit("add comment event", {
+			text: el.value,
+			is_child: true,
+			comment_id: el.dataset.comment,
+		});
+		el.value = "";
 	}
 }
 
