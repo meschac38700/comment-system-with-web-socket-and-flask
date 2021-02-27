@@ -5,7 +5,7 @@ Date.prototype.removeDays = function (d) {
 	return new Date(this.valueOf() - 864e5 * d);
 };
 // Socket io
-const socket = io.connect("http://" + location.hostname + ":5000");
+const socket = io.connect("//" + location.hostname + ":5000");
 
 socket.on("add_handler_comment", (data) => {
 	const date_added = new Date(data.date_added);
