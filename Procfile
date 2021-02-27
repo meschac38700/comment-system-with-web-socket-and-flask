@@ -1,1 +1,1 @@
-web: gunicorn main:comment_design
+web: gunicorn main:main
