@@ -1,33 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400,600&display=swap" rel="stylesheet"> 
-    <link rel="stylesheet" href="style.css">
-    <title>Commentaires vidéo</title>
-</head>
-<body>
-    <div class="main">
-        <div class="container">
-            <div class="content">
-                <form class="add_comment add_parent_comment">
-                    <div class="form-wrapper">
-                        <div class="inline_flex_space">
-                            <label class="comment_label" for="comment">Commentaires</label>
-                            <span class="show_comments"></span>
-                        </div>
-                        <textarea class="new_comment new_parent_comment" name="new_parent_comment" id="comment" placeholder="Ajouter un commentaire public"></textarea>
-                    </div>
-                    <div class="add_comment_footer">
-                        <button type="submit" class="add_comment_btn">Commenter</button>
-                    </div>
-                </form>
-            </div>
-            <confirm-modal id="custom_element_confirm_modal" message="Êtes vous sûr ?" delete_text="Supprimer" cancel_text="Annuler"></confirm-modal>
-        </div>
-    </div>
-    <script src="moment-with-locales.min.js"></script>
-    <script src="app.js"></script>
-</body>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Roboto:wght@400,600&display=swap"
+			rel="stylesheet"
+		/>
+		<link rel="stylesheet" href="style.css" />
+		<title>Commentaires vidéo</title>
+	</head>
+	<body>
+		<div class="main">
+			<div class="container">
+				<div class="content">
+					<form class="add_comment add_parent_comment">
+						<div class="form-wrapper">
+							<div class="inline_flex_space">
+								<label class="comment_label" for="comment">Commentaires</label>
+								<span class="show_comments"></span>
+							</div>
+							<textarea
+								class="new_comment new_parent_comment"
+								name="new_parent_comment"
+								id="comment"
+								placeholder="Ajouter un commentaire public"
+							></textarea>
+						</div>
+						<div class="add_comment_footer">
+							<button type="submit" class="add_comment_btn">Commenter</button>
+						</div>
+					</form>
+				</div>
+				<confirm-modal
+					id="custom_element_confirm_modal"
+					message="Êtes vous sûr ?"
+					delete_text="Supprimer"
+					cancel_text="Annuler"
+				></confirm-modal>
+			</div>
+		</div>
+		<script src="socket.io.min.js"></script>
+		<script src="moment-with-locales.min.js"></script>
+		<script src="app.js"></script>
+	</body>
 </html>
