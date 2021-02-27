@@ -6,8 +6,8 @@ import json
 from flask_cors import CORS
 from settings import SECRET_KEY
 
-app = Flask(__name__, template_folder="./templates",
-            static_folder="./assets/", static_url_path="")
+app = Flask(__name__, template_folder="../templates",
+            static_folder="../assets/", static_url_path="")
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 app.config['SECRET_KEY'] = SECRET_KEY
 socketio = SocketIO(app, logger=True, engineio_logger=True)
