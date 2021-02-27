@@ -21,8 +21,7 @@ socket.on("add_handler_comment", (data) => {
 			(added_since = date_added),
 			(id = `comment_${date_added.getTime().toString()}`)
 		);
-		c.querySelector(".comment_actions.comment_vote_action").dataset.target =
-			c.id;
+		c.querySelector(".comment_vote_action").dataset.target = c.id;
 		c.dataset.child = true;
 		parent_el.prepend(c);
 		hide_or_add_show_children_btn(parent_el.parentElement);
@@ -43,8 +42,7 @@ socket.on("add_handler_comment", (data) => {
 });
 
 socket.on("vote_handler_comment", (data) => {
-	console.log("Voting", data);
-	vote_action = document.querySelector(`[data-target=${data.target}]`);
+	const vote_action = document.querySelector(`[data-target=${data.target}]`);
 	const nbr_vote = data.nbr_vote;
 	const is_child = data.is_child;
 	update_comment_nbr_vote(vote_action.dataset.target, nbr_vote, is_child);
@@ -224,8 +222,10 @@ class CommentSince extends HTMLElement {
 		div.innerText = since;
 		this.appendChild(div);
 		window.setInterval(function () {
-			since = moment(comment_added).locale("fr").fromNow();
-			div.innerText = since;
+			window.requestAnimationFrame(() => {
+				since = moment(comment_added).locale("fr").fromNow();
+				div.innerText = since;
+			});
 		}, 60000);
 	}
 }
