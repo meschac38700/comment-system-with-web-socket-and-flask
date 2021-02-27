@@ -349,10 +349,20 @@ h1, h2, h3, h4, h5, h6
 {
     color: var(--content-primary-color);
 }
+.comment .comment_content_footer .comment_vote_action svg.voted,
+.comment .comment_content_footer .comment_vote_action.voted svg.unvoted{
+    display: none;
+}
+.comment .comment_content_footer .comment_vote_action.voted svg.voted{
+    display: inline-block;
+    color: rgb(255, 166, 0);
+    transition: color .3s;
+
+}
 .comment_element svg.hide,
 .comment_element.show svg.show
 {
-    display: none;
+    display: none !important;
 }
 .comment_element.show svg.hide,
 .comment_element svg.show
