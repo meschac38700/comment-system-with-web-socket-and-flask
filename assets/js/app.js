@@ -14,6 +14,7 @@ socket.on("add_handler_comment", (data) => {
 			.getElementById(data.comment_id)
 			.querySelector("#comment");
 		let parent_el = get_node(el, "comments_children_container");
+
 		let c = new Comment(
 			(owner = "John DOE"),
 			(content = data.text),
@@ -28,7 +29,12 @@ socket.on("add_handler_comment", (data) => {
 		DATA = DATA.map((obj) => {
 			let parent_html_id =
 				"comment_" + new Date(obj.parent.added).getTime().toString();
-			if (data.comment_id === parent_html_id) {
+			const top_parent_html_id = get_node(
+				parent_el,
+				"comment_element",
+				"comment_child"
+			)?.id;
+			if (top_parent_html_id === parent_html_id) {
 				obj.children = [
 					...obj.children,
 					{
@@ -642,6 +648,7 @@ function get_node(el, class_name = null, not = null) {
 	class_name = class_name ? class_name : "comment_container";
 	let selector =
 		not !== null ? `.${class_name}:not(.${not})` : `.${class_name}`;
+
 	let childElement = el.querySelector(selector);
 	if (el.classList.contains(class_name) && !el.classList.contains(not))
 		return el;
