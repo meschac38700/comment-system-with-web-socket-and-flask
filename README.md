@@ -1,21 +1,27 @@
 # Système de commentaire avec Flask et le Web Socket
 
-Système de commentaire à adapter avec la persistance des données avec une base des données.
+Système de commentaire utilisant le webSocket sans persistance des données.
 
 # Requirements
+
 Python >= v3
 
 ## Installation
+
 Créer l'environnement virtuel
 
 ```bash
 python -m venv {nom_environnement_virtuel}
 ```
+
 Activer l'environnement virtuel (Linux, Mac OS)
+
 ```bash
 source venv/bin/activate
 ```
+
 Activer l'environnement virtuel (Windows)
+
 ```bash
 bash ./venv/Script/activate
 ```
@@ -27,6 +33,12 @@ pip install -r requirements.txt
 ```
 
 ## Usage
+
+Deplacez vous dans la branch local
+
+```bash
+git checkout local
+```
 
 Executer la commande suivante pour lancer le serveur:
 
