@@ -4,7 +4,7 @@ import os
 import sys
 import json
 from flask_cors import CORS
-from settings import SECRET_KEY
+from app.settings import SECRET_KEY
 
 app = Flask(__name__, template_folder="../templates",
             static_folder="../assets/", static_url_path="")
