@@ -7,11 +7,23 @@ Date.prototype.removeDays = function (d) {
 // Socket io
 const socket = io.connect("http://" + location.hostname + ":5000");
 
+socket.on("add_handler_comment", (data) => {
+	console.log("Adding");
+});
+
+socket.on("vote_handler_comment", (data) => {
+	console.log("Voting", data);
+	vote_action = document.querySelector(`[data-target=${data.target}]`);
+	const nbr_vote = data.nbr_vote;
+	const is_child = data.is_child;
+	update_comment_nbr_vote(vote_action.dataset.target, nbr_vote, is_child);
+	vote_action.querySelector(".comment_vote_btn").textContent = nbr_vote;
+});
+
 socket.on("delete_handler_comment", (data) => {
-	console.log("data emitted >>>", data);
 	const comment_to_delete = document.getElementById(data.comment_id);
-	comment_to_delete.remove();
-	const parent = comment_to_delete.parentElement;
+	comment_to_delete?.remove();
+	const parent = comment_to_delete?.parentElement;
 	ACTION_COMMENT.comment_to_delete = null;
 	// remove show children btn if no child in the node
 	if (
@@ -22,7 +34,9 @@ socket.on("delete_handler_comment", (data) => {
 	}
 });
 
-const DATA = [
+// End sockio actions
+
+let DATA = [
 	{
 		children: [],
 		parent: {
@@ -63,7 +77,7 @@ const DATA = [
 				author__username: "doeth",
 				nbr_vote: 1,
 				author__last_name: "Doe",
-				added: "2020-07-16T00:00:00Z",
+				added: "2020-07-15T10:01:10Z",
 				id: 8,
 				content: "Last comment on the first parent comment",
 			},
@@ -228,7 +242,10 @@ class Comment extends HTMLElement {
 				.querySelector(".new_comment")
 				.focus();
 		});
-		svg_icon = `<svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="star" class="svg-inline--fa fa-star fa-w-18" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M528.1 171.5L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6zM388.6 312.3l23.7 138.4L288 385.4l-124.3 65.3 23.7-138.4-100.6-98 139-20.2 62.2-126 62.2 126 139 20.2-100.6 98z"></path></svg>`;
+		svg_icon = [
+			`<svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="star" class="svg-inline--fa fa-star fa-w-18 unvoted" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M528.1 171.5L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6zM388.6 312.3l23.7 138.4L288 385.4l-124.3 65.3 23.7-138.4-100.6-98 139-20.2 62.2-126 62.2 126 139 20.2-100.6 98z"></path></svg>`,
+			`<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="star" class="svg-inline--fa fa-star fa-w-18 voted" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"></path></svg>`,
+		];
 		let vote_action = createFooterBtnAction(
 			"comment_actions comment_vote_action",
 			"icon comment_vote_icon",
@@ -237,6 +254,22 @@ class Comment extends HTMLElement {
 			"comment_vote_btn",
 			likes
 		);
+		vote_action.addEventListener("click", () => {
+			vote_action.classList.toggle("voted");
+			const is_child = !!document.getElementById(vote_action.dataset.target)
+				?.dataset.child;
+			let nbr_vote = get_comment(vote_action.dataset.target, is_child)
+				?.nbr_vote;
+			nbr_vote = vote_action.classList.contains("voted")
+				? ++nbr_vote
+				: --nbr_vote;
+			nbr_vote = nbr_vote >= 0 ? nbr_vote : 0;
+			socket.emit("vote comment event", {
+				target: vote_action.dataset.target,
+				nbr_vote,
+				is_child,
+			});
+		});
 		svg_icon = `<svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="trash-alt" class="svg-inline--fa fa-trash-alt fa-w-14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M268 416h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12zM432 80h-82.41l-34-56.7A48 48 0 0 0 274.41 0H173.59a48 48 0 0 0-41.16 23.3L98.41 80H16A16 16 0 0 0 0 96v16a16 16 0 0 0 16 16h16v336a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128h16a16 16 0 0 0 16-16V96a16 16 0 0 0-16-16zM171.84 50.91A6 6 0 0 1 177 48h94a6 6 0 0 1 5.15 2.91L293.61 80H154.39zM368 464H80V128h288zm-212-48h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12z"></path></svg>`;
 		let delete_action = createFooterBtnAction(
 			"comment_actions comment_delete_action",
@@ -468,6 +501,8 @@ add_parent_comment.addEventListener("submit", (e) => {
 			(id = `comment_${date_added.getTime().toString()}`),
 			(isParent = true)
 		);
+		c.querySelector(".comment_actions.comment_vote_action").dataset.target =
+			c.id;
 		document
 			.querySelector(".container .content form.add_parent_comment")
 			.after(c);
@@ -491,11 +526,65 @@ function add_child_comment(el) {
 			(added_since = date_added),
 			(id = `comment_${date_added.getTime().toString()}`)
 		);
+		c.querySelector(".comment_actions.comment_vote_action").dataset.target =
+			c.id;
+		child_c.dataset.child = true;
 		parent_el.prepend(c);
 		hide_or_add_show_children_btn(parent_el.parentElement);
 		// TODO INSERT INTO DATABASE THE CURRENT COMMENT CHILD
 	}
 }
+
+/****************  Get comment from DATA  *************
+ ******************************************************/
+function get_comment(comment_html_id, is_child = false) {
+	if (is_child) {
+		for (let comment of DATA) {
+			for (let child of comment.children) {
+				current_comment_child_html_id =
+					"comment_" + new Date(child.added).getTime().toString();
+
+				if (current_comment_child_html_id === comment_html_id) {
+					return child;
+				}
+			}
+		}
+	}
+	return DATA.find((comment) => {
+		current_comment_parent_html_id =
+			"comment_" + new Date(comment.parent.added).getTime().toString();
+
+		return current_comment_parent_html_id === comment_html_id;
+	})?.parent;
+}
+
+/****  Update  vote number of comment from DATA  ******
+ ******************************************************/
+function update_comment_nbr_vote(comment_html_id, nb_vote, is_child = false) {
+	DATA = is_child
+		? DATA.map((comment) => {
+				comment.children = comment.children.map((comment_child) => {
+					current_comment_child_html_id =
+						"comment_" + new Date(comment_child.added).getTime().toString();
+
+					if (current_comment_child_html_id === comment_html_id) {
+						comment_child.nbr_vote = nb_vote;
+					}
+					return comment_child;
+				});
+				return comment;
+		  })
+		: DATA.map((comment) => {
+				current_comment_parent_html_id =
+					"comment_" + new Date(comment.parent.added).getTime().toString();
+
+				if (current_comment_parent_html_id === comment_html_id) {
+					comment.nbr_vote = nb_vote;
+				}
+				return comment;
+		  });
+}
+
 /****************  Get parentNode  ****************
  ******************************************************/
 function get_node(el, class_name = null, not = null) {
@@ -537,6 +626,9 @@ DATA.forEach((comment_data) => {
 		(id = `comment_${date_added.getTime().toString()}`),
 		(isParent = true)
 	);
+	parent_c.querySelector(
+		".comment_actions.comment_vote_action"
+	).dataset.target = parent_c.id;
 	if (children.length > 0) {
 		children.forEach((child_data) => {
 			date_added = new Date(child_data.added);
@@ -549,6 +641,10 @@ DATA.forEach((comment_data) => {
 				(added_since = date_added),
 				(id = `comment_${date_added.getTime().toString()}`)
 			);
+			child_c.querySelector(
+				".comment_actions.comment_vote_action"
+			).dataset.target = child_c.id;
+			child_c.dataset.child = true;
 			parent_c.querySelector(".comments_children_container").prepend(child_c);
 		});
 	}
