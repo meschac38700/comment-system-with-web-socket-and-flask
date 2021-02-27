@@ -1,3 +1,4 @@
 {
-    "liveServer.settings.port": 5501
+    "liveServer.settings.port": 5501,
+    "python.pythonPath": "/data/programmation/python/flask/comment_with_socket/comment_design/venv/bin/python3.9"
 }
