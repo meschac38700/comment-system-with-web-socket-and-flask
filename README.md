@@ -46,6 +46,8 @@ Executer la commande suivante pour lancer le serveur:
 python main.py
 ```
 
+Allez sur: http://127.0.0.1:5000/
+
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
