@@ -10,8 +10,7 @@ app = Flask(__name__, template_folder="../templates",
             static_folder="../assets/", static_url_path="")
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 app.config['SECRET_KEY'] = SECRET_KEY
-socketio = SocketIO(
-    app, cors_allowed_origins='https://agile-depths-70236.herokuapp.com/')
+socketio = SocketIO(app, cors_allowed_origins='*')
 
 
 @socketio.on('connect')
