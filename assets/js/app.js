@@ -8,7 +8,7 @@ Date.prototype.removeDays = function (d) {
 const socket = io.connect("http://" + location.hostname + ":5000");
 
 socket.on("add_handler_comment", (data) => {
-	const date_added = new Date();
+	const date_added = new Date(data.date_added);
 	if (data.is_child) {
 		const el = document
 			.getElementById(data.comment_id)
@@ -25,6 +25,25 @@ socket.on("add_handler_comment", (data) => {
 		c.dataset.child = true;
 		parent_el.prepend(c);
 		hide_or_add_show_children_btn(parent_el.parentElement);
+		DATA = DATA.map((obj) => {
+			let parent_html_id =
+				"comment_" + new Date(obj.parent.added).getTime().toString();
+			if (data.comment_id === parent_html_id) {
+				obj.children = [
+					...obj.children,
+					{
+						author__first_name: "John",
+						author__username: `doejo_${date_added.getTime().toString()}`,
+						nbr_vote: 0,
+						author__last_name: "Doe",
+						added: date_added,
+						id: get_ID(),
+						content: data.text,
+					},
+				];
+			}
+			return obj;
+		});
 		return;
 	}
 	let c = new Comment(
@@ -39,8 +58,31 @@ socket.on("add_handler_comment", (data) => {
 	document
 		.querySelector(".container .content form.add_parent_comment")
 		.after(c);
+	DATA = [
+		...DATA,
+		{
+			children: [],
+			parent: {
+				author__first_name: "John",
+				author__username: `doejo_${date_added.getTime().toString()}`,
+				nbr_vote: 0,
+				author__last_name: "Doe",
+				added: date_added,
+				id: get_ID() + 1,
+				content: data.text,
+			},
+		},
+	];
 });
-
+function get_ID() {
+	return Number.parseInt(
+		DATA.reduce((acc, value) => {
+			acc += value.children.length;
+			acc += 1;
+			return acc;
+		}, 0)
+	);
+}
 socket.on("vote_handler_comment", (data) => {
 	const vote_action = document.querySelector(`[data-target=${data.target}]`);
 	const nbr_vote = data.nbr_vote;
@@ -521,7 +563,8 @@ add_parent_comment.addEventListener("submit", (e) => {
 	e.preventDefault();
 	let el = add_parent_comment.querySelector(".new_parent_comment");
 	if (el.value.trim() != "") {
-		socket.emit("add comment event", { text: el.value });
+		const date_added = new Date().toString();
+		socket.emit("add comment event", { text: el.value, date_added });
 		el.value = "";
 		// TODO INSERT INTO DATABASE THE CURRENT COMMENT CHILD
 	}
@@ -532,10 +575,12 @@ function add_child_comment(el) {
 	// TODO Only for dev env
 
 	if (el.value.trim() !== "") {
+		const date_added = new Date().toString();
 		socket.emit("add comment event", {
 			text: el.value,
 			is_child: true,
 			comment_id: el.dataset.comment,
+			date_added,
 		});
 		el.value = "";
 	}
