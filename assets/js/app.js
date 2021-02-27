@@ -339,10 +339,11 @@ class Comment extends HTMLElement {
 				?.dataset.child;
 			let nbr_vote = get_comment(vote_action.dataset.target, is_child)
 				?.nbr_vote;
+			// update nbr_vote (unvote -1 / vote +1)
 			nbr_vote = vote_action.classList.contains("voted")
 				? ++nbr_vote
 				: --nbr_vote;
-			nbr_vote = nbr_vote >= 0 ? nbr_vote : 0;
+			nbr_vote = nbr_vote >= 0 ? nbr_vote : 0; // prevent negative number
 			socket.emit("vote comment event", {
 				target: vote_action.dataset.target,
 				nbr_vote,
@@ -636,7 +637,7 @@ function update_comment_nbr_vote(comment_html_id, nb_vote, is_child = false) {
 					"comment_" + new Date(comment.parent.added).getTime().toString();
 
 				if (current_comment_parent_html_id === comment_html_id) {
-					comment.nbr_vote = nb_vote;
+					comment.parent.nbr_vote = nb_vote;
 				}
 				return comment;
 		  });
