@@ -1,15 +1,12 @@
 from flask import Flask, render_template
-from flask_socketio import SocketIO, send, emit
-import os
-import sys
-import json
+from flask_socketio import SocketIO, emit
 from flask_cors import CORS
-from settings import SECRET_KEY
+import settings
 
 app = Flask(__name__, template_folder="./templates",
             static_folder="./assets/", static_url_path="")
+app.config['SECRET_KEY'] = getattr(settings, 'SECRET_KEY', 'mySecretKey')
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
-app.config['SECRET_KEY'] = SECRET_KEY
 socketio = SocketIO(app, logger=True, engineio_logger=True)
 
 
