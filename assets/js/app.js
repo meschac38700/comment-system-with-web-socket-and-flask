@@ -43,7 +43,7 @@ socket.on("add_handler_comment", (data) => {
 						nbr_vote: 0,
 						author__last_name: "Doe",
 						added: date_added,
-						id: get_ID(),
+						id: get_ID() + 1,
 						content: data.text,
 					},
 				];
