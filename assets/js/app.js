@@ -1,5 +1,5 @@
 // Socket io
-const socket = io.connect("http://" + location.hostname + ":5000");
+const socket = io.connect();
 
 socket.on("add_handler_comment", (data) => {
 	const date_added = new Date(Number.parseInt(data.date_added));
