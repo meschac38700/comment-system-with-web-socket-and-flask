@@ -1,6 +1,5 @@
 // Socket io
-const socket = io.connect();
-
+const socket = io();
 socket.on("add_handler_comment", (data) => {
 	const date_added = new Date(Number.parseInt(data.date_added));
 	if (data.is_child) {
