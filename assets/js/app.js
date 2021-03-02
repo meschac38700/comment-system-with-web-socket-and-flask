@@ -13,8 +13,6 @@ socket.on("add_handler_comment", (data) => {
 			"comment_element",
 			"comment_child"
 		)?.id;
-		console.log("top parent html id", top_parent_html_id);
-		console.log(data);
 		let c = new Comment(
 			(owner = `${data.author_firstname} ${data.author_lastname}`),
 			(content = data.content),
@@ -610,9 +608,6 @@ function get_node(el, class_name = null, not = null) {
 	class_name = class_name ? class_name : "comment_container";
 	let selector =
 		not !== null ? `.${class_name}:not(.${not})` : `.${class_name}`;
-	console.log(selector);
-	console.log(el);
-	console.log("____________________________________________");
 	let childElement = el.querySelector(selector);
 	if (el.classList.contains(class_name) && !el.classList.contains(not))
 		return el;
@@ -694,7 +689,6 @@ socket.on("load_comments", (comments) => {
 				Number.parseInt(comment_data.added)
 			).toISOString();
 			if (comment_data.parent_id === null) {
-				console.log(comment_data);
 				// is parent comment
 				DATA = [
 					...DATA,
@@ -704,14 +698,11 @@ socket.on("load_comments", (comments) => {
 					},
 				];
 			} else {
-				console.log(comment_data);
 				DATA.find((c) => c.parent.id == comment_data.parent_id)?.children.push(
 					comment_data
 				);
 			}
 		});
-		console.log("_____________________________________");
-		console.log(DATA);
 		load_comments();
 	}
 });
