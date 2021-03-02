@@ -3,8 +3,8 @@ from flask_socketio import SocketIO, emit
 from flask_cors import CORS
 from app.models import Database
 from app import settings
-app = Flask(__name__, template_folder="./templates",
-            static_folder="./assets/", static_url_path="")
+app = Flask(__name__, template_folder="/templates/",
+            static_folder="/assets/", static_url_path="")
 with app.app_context():
     DB = Database()
 
