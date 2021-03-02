@@ -1,25 +1,24 @@
-Date.prototype.addDays = function (d) {
-	return new Date(this.valueOf() + 864e5 * d);
-};
-Date.prototype.removeDays = function (d) {
-	return new Date(this.valueOf() - 864e5 * d);
-};
 // Socket io
-const socket = io();
+const socket = io.connect("http://" + location.hostname + ":5000");
 
 socket.on("add_handler_comment", (data) => {
-	const date_added = new Date(data.date_added);
+	const date_added = new Date(Number.parseInt(data.date_added));
 	if (data.is_child) {
 		const el = document
 			.getElementById(data.comment_id)
 			.querySelector("#comment");
 		let parent_el = get_node(el, "comments_children_container");
-
+		const top_parent_html_id = get_node(
+			parent_el,
+			"comment_element",
+			"comment_child"
+		)?.id;
 		let c = new Comment(
-			(owner = "John DOE"),
-			(content = data.text),
-			(likes = 0),
+			(owner = `${data.author_firstname} ${data.author_lastname}`),
+			(content = data.content),
+			(likes = data.nbr_vote),
 			(added_since = date_added),
+			(comment_parent_html_id = top_parent_html_id),
 			(id = `comment_${date_added.getTime().toString()}`)
 		);
 		c.querySelector(".comment_vote_action").dataset.target = c.id;
@@ -29,22 +28,16 @@ socket.on("add_handler_comment", (data) => {
 		DATA = DATA.map((obj) => {
 			let parent_html_id =
 				"comment_" + new Date(obj.parent.added).getTime().toString();
-			const top_parent_html_id = get_node(
-				parent_el,
-				"comment_element",
-				"comment_child"
-			)?.id;
 			if (top_parent_html_id === parent_html_id) {
 				obj.children = [
 					...obj.children,
 					{
-						author__first_name: "John",
-						author__username: `doejo_${date_added.getTime().toString()}`,
-						nbr_vote: 0,
-						author__last_name: "Doe",
+						author_firstname: data.author_firstname,
+						nbr_vote: data.nbr_vote,
+						author_lastname: data.author_lastname,
 						added: date_added,
-						id: get_ID() + 1,
-						content: data.text,
+						id: data.id,
+						content: data.content,
 					},
 				];
 			}
@@ -53,11 +46,12 @@ socket.on("add_handler_comment", (data) => {
 		return;
 	}
 	let c = new Comment(
-		(owner = "John DOE"),
-		(content = data.text),
-		(likes = 0),
+		(owner = `${data.author_firstname} ${data.author_lastname}`),
+		(content = data.content),
+		(likes = data.nbr_vote),
 		(added_since = date_added),
 		(id = `comment_${date_added.getTime().toString()}`),
+		(comment_parent_html_id = `comment_${date_added.getTime().toString()}`),
 		(isParent = true)
 	);
 	c.querySelector(".comment_actions.comment_vote_action").dataset.target = c.id;
@@ -69,26 +63,17 @@ socket.on("add_handler_comment", (data) => {
 		{
 			children: [],
 			parent: {
-				author__first_name: "John",
-				author__username: `doejo_${date_added.getTime().toString()}`,
-				nbr_vote: 0,
-				author__last_name: "Doe",
+				author_firstname: data.author_firstname,
+				nbr_vote: data.nbr_vote,
+				author_lastname: data.author_lastname,
 				added: date_added,
-				id: get_ID() + 1,
-				content: data.text,
+				id: data.id,
+				content: data.content,
 			},
 		},
 	];
 });
-function get_ID() {
-	return Number.parseInt(
-		DATA.reduce((acc, value) => {
-			acc += value.children.length;
-			acc += 1;
-			return acc;
-		}, 0)
-	);
-}
+
 socket.on("vote_handler_comment", (data) => {
 	const vote_action = document.querySelector(`[data-target=${data.target}]`);
 	const nbr_vote = data.nbr_vote;
@@ -111,67 +96,19 @@ socket.on("delete_handler_comment", (data) => {
 	}
 });
 
+function get_ID() {
+	return Number.parseInt(
+		DATA.reduce((acc, value) => {
+			acc += value.children.length;
+			acc += 1;
+			return acc;
+		}, 0)
+	);
+}
+
 // End sockio actions
 
-let DATA = [
-	{
-		children: [],
-		parent: {
-			author__first_name: "Frederic",
-			author__username: "doefr",
-			nbr_vote: 0,
-			author__last_name: "Doe",
-			added: "2020-07-15T00:00:00Z",
-			id: 7,
-			content:
-				"Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur ratione omnis alias magnam? Consectetur, dignissimos!",
-		},
-	},
-	{
-		children: [
-			{
-				author__first_name: "Aymen",
-				author__username: "doeay",
-				nbr_vote: 0,
-				author__last_name: "Doe",
-				added: "2020-07-15T14:23:04Z",
-				id: 4,
-				content:
-					"Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur ratione omnis alias magnam?",
-			},
-			{
-				author__first_name: "Jeremy",
-				author__username: "doeje",
-				nbr_vote: 0,
-				author__last_name: "Doe",
-				added: "2020-07-16T00:00:00Z",
-				id: 3,
-				content:
-					"Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur ratione omnis alias magnam?",
-			},
-			{
-				author__first_name: "Thierry",
-				author__username: "doeth",
-				nbr_vote: 1,
-				author__last_name: "Doe",
-				added: "2020-07-15T10:01:10Z",
-				id: 8,
-				content: "Last comment on the first parent comment",
-			},
-		],
-		parent: {
-			author__first_name: "Eliam",
-			author__username: "doeel",
-			nbr_vote: 3,
-			author__last_name: "Doe",
-			added: "2020-07-15T14:20:46Z",
-			id: 1,
-			content:
-				"Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur ratione omnis alias magnam? Consectetur, dignissimos! Officia debitis iste libero omnis porro facilis architecto! Officia corrupti cum vitae laborum minus exerci",
-		},
-	},
-];
-
+let DATA = [];
 const ACTION_COMMENT = {
 	comment_to_delete: null,
 };
@@ -281,7 +218,15 @@ class CommentSince extends HTMLElement {
 customElements.define("comment-since", CommentSince);
 
 class Comment extends HTMLElement {
-	constructor(owner, content, likes, added_since, id, isParent = null) {
+	constructor(
+		owner,
+		content,
+		likes,
+		added_since,
+		id,
+		comment_parent_html_id,
+		isParent = null
+	) {
 		super();
 		this.setAttribute("class", "comment_element");
 		this.setAttribute("id", id);
@@ -337,15 +282,17 @@ class Comment extends HTMLElement {
 			vote_action.classList.toggle("voted");
 			const is_child = !!document.getElementById(vote_action.dataset.target)
 				?.dataset.child;
-			let nbr_vote = get_comment(vote_action.dataset.target, is_child)
-				?.nbr_vote;
+			const curr_comment = get_comment(vote_action.dataset.target, is_child);
+			let nbr_vote = curr_comment?.nbr_vote;
 			// update nbr_vote (unvote -1 / vote +1)
 			nbr_vote = vote_action.classList.contains("voted")
 				? ++nbr_vote
 				: --nbr_vote;
 			nbr_vote = nbr_vote >= 0 ? nbr_vote : 0; // prevent negative number
+
 			socket.emit("vote comment event", {
 				target: vote_action.dataset.target,
+				comment_id: curr_comment?.id,
 				nbr_vote,
 				is_child,
 			});
@@ -380,7 +327,7 @@ class Comment extends HTMLElement {
 			.appendChild(delete_action);
 		let add_comment = document.createElement("DIV");
 		add_comment.setAttribute("class", "add_comment");
-		add_comment.innerHTML = `<textarea class="new_comment" name="new_comment" id="comment" rows="10" data-comment=${id} placeholder="Ajouter un commentaire public"></textarea>`;
+		add_comment.innerHTML = `<textarea class="new_comment" name="new_comment" id="comment" rows="10" data-comment=${comment_parent_html_id} placeholder="Ajouter un commentaire public"></textarea>`;
 		let new_comment = add_comment.querySelector(".new_comment");
 		new_comment.addEventListener("keyup", function (e) {
 			if (
@@ -569,9 +516,16 @@ let add_parent_comment = document.querySelector("form.add_parent_comment");
 add_parent_comment.addEventListener("submit", (e) => {
 	e.preventDefault();
 	let el = add_parent_comment.querySelector(".new_parent_comment");
-	if (el.value.trim() != "") {
-		const date_added = new Date().toString();
-		socket.emit("add comment event", { text: el.value, date_added });
+	if (el.value.trim() !== "") {
+		const date_added = new Date().getTime();
+		socket.emit("add comment event", {
+			content: el.value,
+			nbr_vote: 0,
+			parent_id: null,
+			author_firstname: "John",
+			author_lastname: "DOE",
+			date_added,
+		});
 		el.value = "";
 		// TODO INSERT INTO DATABASE THE CURRENT COMMENT CHILD
 	}
@@ -582,11 +536,16 @@ function add_child_comment(el) {
 	// TODO Only for dev env
 
 	if (el.value.trim() !== "") {
-		const date_added = new Date().toString();
+		const date_added = new Date().getTime();
+		const parent_id = get_comment(el.dataset.comment).id;
 		socket.emit("add comment event", {
-			text: el.value,
+			content: el.value,
 			is_child: true,
 			comment_id: el.dataset.comment,
+			nbr_vote: 0,
+			author_firstname: "John",
+			author_lastname: "DOE",
+			parent_id,
 			date_added,
 		});
 		el.value = "";
@@ -649,7 +608,6 @@ function get_node(el, class_name = null, not = null) {
 	class_name = class_name ? class_name : "comment_container";
 	let selector =
 		not !== null ? `.${class_name}:not(.${not})` : `.${class_name}`;
-
 	let childElement = el.querySelector(selector);
 	if (el.classList.contains(class_name) && !el.classList.contains(not))
 		return el;
@@ -670,45 +628,82 @@ function hide_show_child_comment_text(el) {
 customElements.define("comment-element", Comment);
 
 // Adding data from Server
-DATA.forEach((comment_data) => {
-	let parent_container = document.querySelector(".container .content");
-	let children = comment_data.children;
-	let parent = comment_data.parent;
-	let date_added = new Date(parent.added);
-	let parent_c = new Comment(
-		(owner = `${
-			parent.author__first_name
-		} ${parent.author__last_name.toUpperCase()}`),
-		(content = parent.content),
-		(likes = parent.nbr_vote),
-		(added_since = date_added),
-		(id = `comment_${date_added.getTime().toString()}`),
-		(isParent = true)
-	);
-	parent_c.querySelector(
-		".comment_actions.comment_vote_action"
-	).dataset.target = parent_c.id;
-	if (children.length > 0) {
-		children.forEach((child_data) => {
-			date_added = new Date(child_data.added);
-			let child_c = new Comment(
-				(owner = `${
-					child_data.author__first_name
-				} ${child_data.author__last_name.toUpperCase()}`),
-				(content = child_data.content),
-				(likes = child_data.nbr_vote),
-				(added_since = date_added),
-				(id = `comment_${date_added.getTime().toString()}`)
-			);
-			child_c.querySelector(
-				".comment_actions.comment_vote_action"
-			).dataset.target = child_c.id;
-			child_c.dataset.child = true;
-			parent_c.querySelector(".comments_children_container").prepend(child_c);
+function load_comments() {
+	DATA.forEach((comment_data) => {
+		// let parent_container = document.querySelector(".container .content");
+		let children = comment_data.children;
+		let parent = comment_data.parent;
+		let parent_date_added = new Date(parent.added);
+		let parent_c = new Comment(
+			(owner = `${
+				parent.author_firstname
+			} ${parent.author_lastname.toUpperCase()}`),
+			(content = parent.content),
+			(likes = parent.nbr_vote),
+			(added_since = parent_date_added),
+			(id = `comment_${parent_date_added.getTime().toString()}`),
+			(comment_parent_html_id = `comment_${parent_date_added
+				.getTime()
+				.toString()}`),
+			(isParent = true)
+		);
+		parent_c.querySelector(
+			".comment_actions.comment_vote_action"
+		).dataset.target = parent_c.id;
+		if (children.length > 0) {
+			children.forEach((child_data) => {
+				date_added = new Date(child_data.added);
+				let child_c = new Comment(
+					(owner = `${
+						child_data.author_firstname
+					} ${child_data.author_lastname.toUpperCase()}`),
+					(content = child_data.content),
+					(likes = child_data.nbr_vote),
+					(added_since = date_added),
+					(id = `comment_${date_added.getTime().toString()}`),
+					(comment_parent_html_id = `comment_${parent_date_added
+						.getTime()
+						.toString()}`)
+				);
+				child_c.querySelector(
+					".comment_actions.comment_vote_action"
+				).dataset.target = child_c.id;
+				child_c.dataset.child = true;
+				parent_c
+					.querySelector(".comments_children_container")
+					.appendChild(child_c);
+			});
+		}
+		document.querySelector(".add_comment.add_parent_comment").after(parent_c);
+		// parent_container.after(parent_c);
+		hide_or_add_show_children_btn(parent_c);
+	});
+}
+// Get comments from socketio
+socket.on("load_comments", (comments) => {
+	comments.sort((a, b) => a.id - b.id);
+	if (document.querySelectorAll(".comment_element").length === 0) {
+		DATA = [];
+		comments.forEach((comment_data) => {
+			comment_data.added = new Date(
+				Number.parseInt(comment_data.added)
+			).toISOString();
+			if (comment_data.parent_id === null) {
+				// is parent comment
+				DATA = [
+					...DATA,
+					{
+						children: [],
+						parent: comment_data,
+					},
+				];
+			} else {
+				DATA.find((c) => c.parent.id == comment_data.parent_id)?.children.push(
+					comment_data
+				);
+			}
 		});
+		load_comments();
 	}
-	parent_container.appendChild(parent_c);
-	hide_or_add_show_children_btn(parent_c);
 });
-
 hide_or_add_show_children_btn();

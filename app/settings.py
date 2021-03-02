@@ -1,1 +1,2 @@
-SECRET_KEY = "mySecretKey"
+SECRET_KEY = 'mySecretKey'
+DATABASE = './database.db'
