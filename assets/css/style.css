@@ -3,8 +3,8 @@
     --primary-background-color: #e6e6ee;
     --secondary-background-color: #f3f3f3;
     --third-background-color: rgb(255, 255, 255);
-    --content-primary-color: rgba(6, 14, 29, 0.75);
-    --content-secondary-color: rgba(54, 56, 58, 0.65);
+    --content-primary-color: #2e445f;
+    --content-secondary-color: #00c687;
     --content-third-color: rgb(156, 154, 154);
     --background-color: #ccc;
     --padding-comment-content: 25px;
@@ -36,6 +36,12 @@ h1, h2, h3, h4, h5, h6
     font-weight: 500;
     color: var(--content-primary-color);
     font-size: 16px;
+}
+.title{
+    font-size: 30px;
+    margin-top: .4em;
+    margin-bottom: 1em;
+    text-align: center;
 }
 
 .alert{
