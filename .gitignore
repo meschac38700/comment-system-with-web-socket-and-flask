@@ -3,6 +3,9 @@
 # Learn more about .gitignore:
 #     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 
+database.db
+settings.py
+
 # Node artifact files
 node_modules/
 dist/
@@ -14,6 +17,7 @@ dist/
 *.py[cod]
 __pycache__/
 venv/
+
 # Log files
 *.log
 
