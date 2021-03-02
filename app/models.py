@@ -1,6 +1,6 @@
 import sqlite3
 from flask import g
-import app.settings
+from app import settings
 
 DB_PATH = getattr(settings, 'DATABASE', './database.db')
 
