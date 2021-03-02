@@ -36,7 +36,7 @@ def on_add_comment(data=None):
         author_firstname)
         VALUES(?,?,?,?,?,?)
         """, (
-        data['parent_id'],
+        data.get('parent_id', None),
         data['content'],
         data['nbr_vote'],
         data['date_added'],
@@ -44,13 +44,13 @@ def on_add_comment(data=None):
         'John',
     ))
     data['id'] = comment_id
-    print(">>>>>>>>>>>>>>>>>>>>>>> Add", data)
+    print(">>>> Add", data)
     emit('add_handler_comment', data, broadcast=True)
 
 
 @socketio.on('delete comment event')
 def on_delete_comment(data=None):
-    print(">>>>>>>>>>>>>>>>>>>>>>> Delete", data)
+    print(">>>> Delete", data)
     emit('delete_handler_comment', data, broadcast=True)
 
 
