@@ -10,7 +10,7 @@ with app.app_context():
 
 app.config['SECRET_KEY'] = getattr(settings, 'SECRET_KEY', 'mySecretKey')
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
-socketio = SocketIO(app, logger=True, engineio_logger=True)
+socketio = SocketIO(app, cors_allowed_origins='*')
 
 
 @socketio.on('connect')
