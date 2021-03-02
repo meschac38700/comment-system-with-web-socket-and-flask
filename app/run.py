@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
 from flask_cors import CORS
+from app.models import Database
 from app.settings import SECRET_KEY
 app = Flask(__name__, template_folder="./templates",
             static_folder="./assets/", static_url_path="")
