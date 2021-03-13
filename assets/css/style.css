@@ -107,15 +107,17 @@ h1, h2, h3, h4, h5, h6
     animation: down 1s cubic-bezier(.77,0,.18,1) forwards;
 }
 .alert_success{
-    background-color: #99c93d;
+    background-color: var(--green-color);
+    border: 1px solid var(--green-color);
 }
 .alert_warning {
     color: #8a6d3b;
     background-color: var(--warning-color);
-    border-color: var(--warning-color);
+    border:1px solid var(--warning-color);
 }
 .alert_error {
     background: var(--red-color);
+    border: 1px solid var(--red-color);
     color: #fff;
 }
 .alert .close{
