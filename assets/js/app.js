@@ -28,7 +28,6 @@ socket.on("add_handler_comment", (data) => {
 			"comment_child"
 		)?.id;
 		let c = new Comment(
-			socket,
 			`${data.author_firstname} ${data.author_lastname}`,
 			data.content,
 			data.nbr_vote,
@@ -61,7 +60,6 @@ socket.on("add_handler_comment", (data) => {
 		return;
 	}
 	let c = new Comment(
-		socket,
 		`${data.author_firstname} ${data.author_lastname}`,
 		data.content,
 		data.nbr_vote,

@@ -1,7 +1,7 @@
+import socket from '/js/app.js';
 import utils from "/js/Utils.js";
 export class Comment extends HTMLElement {
 	constructor(
-		socket,
 		owner,
 		content,
 		likes,
@@ -11,7 +11,6 @@ export class Comment extends HTMLElement {
 		isParent = null
 	) {
 		super();
-		this.socket = socket;
 		this.setAttribute("class", "comment_element");
 		this.setAttribute("id", id);
 		let comment = document.createElement("DIV");
@@ -76,7 +75,7 @@ export class Comment extends HTMLElement {
 				? ++nbr_vote
 				: --nbr_vote;
 			nbr_vote = nbr_vote >= 0 ? nbr_vote : 0; // prevent negative number
-			this.socket.emit("vote comment event", {
+			socket.emit("vote comment event", {
 				target: vote_action.dataset.target,
 				comment_id: curr_comment?.id,
 				nbr_vote,
@@ -190,9 +189,8 @@ export class Comment extends HTMLElement {
 
 		if (el.value.trim() !== "") {
 			const date_added = new Date().getTime();
-			const parent_id = utils.get_comment(el.dataset.comment)
-				?.id;
-			this.socket.emit("add comment event", {
+			const parent_id = utils.get_comment(el.dataset.comment)?.id;
+			socket.emit("add comment event", {
 				content: el.value,
 				is_child: true,
 				comment_id: el.dataset.comment,
@@ -245,7 +243,6 @@ export function load_comments(socket) {
 		let parent = comment_data.parent;
 		let parent_date_added = new Date(parent.added);
 		let parent_c = new Comment(
-			socket,
 			`${parent.author_firstname}` + `${parent.author_lastname.toUpperCase()}`,
 			parent.content,
 			parent.nbr_vote,
@@ -261,7 +258,6 @@ export function load_comments(socket) {
 			children.forEach((child_data) => {
 				const date_added = new Date(child_data.added);
 				let child_c = new Comment(
-					socket,
 					`${child_data.author_firstname}` +
 						`${child_data.author_lastname.toUpperCase()}`,
 					child_data.content,
