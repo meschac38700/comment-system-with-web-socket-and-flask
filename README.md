@@ -26,6 +26,12 @@ Créer à la racine du projet le fichier database.db
 touch database.db
 ```
 
+Créer à la racine du projet le fichier settings.py et spécifier les variables listées dans settings.py.example
+
+```bash
+touch settings.py
+```
+
 Créer l'environnement virtuel
 
 ```bash
