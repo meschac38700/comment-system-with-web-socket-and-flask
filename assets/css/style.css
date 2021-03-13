@@ -362,7 +362,7 @@ h1, h2, h3, h4, h5, h6
 .comment_element svg.hide,
 .comment_element.show svg.show
 {
-    display: none !important;
+    display: none;
 }
 .comment_element.show svg.hide,
 .comment_element svg.show
