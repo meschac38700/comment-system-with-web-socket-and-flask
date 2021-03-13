@@ -126,6 +126,13 @@ class Database():
         cur.close()
         return (rv[0] if rv else None) if one else rv
 
+    def delete_query(self, query, args=()):
+        connection = self.get_db
+        cur = connection.cursor()
+        cur.execute(query, args)
+        connection.commit()
+        return "Delete successfully"
+
     def insert_query(self, query, data=()):
         conn = self.get_db
         cur = conn.cursor()

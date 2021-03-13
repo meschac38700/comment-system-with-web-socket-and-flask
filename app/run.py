@@ -50,6 +50,11 @@ def on_add_comment(data=None):
 @socketio.on('delete comment event')
 def on_delete_comment(data=None):
     print(">>>> Delete", data)
+    result = DB.delete_query(
+        "DELETE FROM comments WHERE id = ?",
+        (data['comment_id'],)
+    )
+    data['message'] = result
     emit('delete_handler_comment', data, broadcast=True)
 
 
