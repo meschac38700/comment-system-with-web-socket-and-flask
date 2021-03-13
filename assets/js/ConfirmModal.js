@@ -31,7 +31,7 @@ export default class ConfirmModal extends HTMLElement {
 				.classList.remove("show");
 			// get comment backend id
 			let comment_id = utils.get_comment(window.ACTION_COMMENT.comment_to_delete.id)?.id;
-			comment_id = comment_id !== null? comment_id: utils.get_comment(window.ACTION_COMMENT.comment_to_delete.id, is_child=true)?.id;
+			comment_id = comment_id !== undefined? comment_id: utils.get_comment(window.ACTION_COMMENT.comment_to_delete.id, true)?.id;
 			// Send delete request to the socket handler
 			socket.emit("delete comment event", {
 				comment_html_id: window.ACTION_COMMENT.comment_to_delete.id,
