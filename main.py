@@ -51,18 +51,23 @@ def on_add_comment(data=None):
 @socketio.on('delete comment event')
 def on_delete_comment(data=None):
     print(">>>> Delete", data)
+    result = DB.delete_query(
+        "DELETE FROM comments WHERE id = ?",
+        (data['comment_id'],)
+    )
+    data['message'] = result
     emit('delete_handler_comment', data, broadcast=True)
 
 
 @socketio.on('vote comment event')
 def on_vote_comment(data=None):
+    print("DEBUG UPDATE", "data", data)
     DB.update_query(
         "UPDATE comments SET nbr_vote = ? WHERE id = ?", (
             data['nbr_vote'],
             data['comment_id'],
         )
     )
-    print("DEBUG UPDATE", "data", data)
     print(">>>> Vote", data)
     emit('vote_handler_comment', data, broadcast=True)
 
