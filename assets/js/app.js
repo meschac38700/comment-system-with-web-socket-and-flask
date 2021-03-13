@@ -7,11 +7,20 @@ import {
 import AlertMessage from "/js/Alert.js";
 import ConfirmModal from "/js/ConfirmModal.js";
 import CommentSince from "/js/Timers.js";
+import Switch from "/js/Switch.js";
 customElements.define("alert-message", AlertMessage);
 customElements.define("comment-element", Comment);
 customElements.define("confirm-modal", ConfirmModal);
 customElements.define("comment-since", CommentSince);
-
+customElements.define("switch-element", Switch);
+window.addEventListener("load", (e) =>
+{
+	console.log(utils.getCookie(utils.COOKIE_KEY)?.trim()?.toLowerCase());
+	const is_active = utils.getCookie(utils.COOKIE_KEY)?.trim()?.toLowerCase() === "light";
+	const switch_element = new Switch(is_active);
+	document.querySelector('.content').prepend(switch_element);
+	console.log("Toutes les ressources sont chargées !");
+});
 // Socket io
 const socket = io.connect("http://" + location.hostname + ":5000");
 

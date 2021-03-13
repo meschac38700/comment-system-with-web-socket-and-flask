@@ -1,4 +1,6 @@
 class Utility {
+
+	COOKIE_KEY = "themeState";
 	/**
 	 * Hide or show 'show responses' button
 	 * @param {HTMLElement} parent_comment
@@ -162,6 +164,20 @@ class Utility {
 		el.appendChild(el_icon);
 		el.appendChild(el_span);
 		return el;
+	}
+
+	setCookie(cvalue, exdays, cname=this.COOKIE_KEY) {
+		var d = new Date();
+		d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+		var expires = "expires=" + d.toUTCString();
+		document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+	}
+
+	getCookie() {
+		return document.cookie
+			.split("; ")
+			?.find((row) => row.startsWith(this.COOKIE_KEY))
+			?.split("=")[1];
 	}
 }
 export default new Utility();
