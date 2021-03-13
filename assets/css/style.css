@@ -9,11 +9,9 @@
     --background-color: #ccc;
     --padding-comment-content: 25px;
     --margin-between-comment: 1em;
-    --red-color: rgb(255, 95, 95);
-    --green-color: rgb(60, 196, 48);
-    --alert-background-color:  #00baf3;;
-    --alert-danger-background-color: #d14130;
-    --alert-success-background-color: #99c93d;
+    --red-color: rgba(255, 95, 95, 0.644);
+    --green-color: rgba(60, 196, 48, 0.658);
+    --warning-color: #fcf8e3;
 }
 [data-theme="dark"]{
     --primary-background-color: #101821;
@@ -44,6 +42,7 @@
     border: 1px solid var(--content-primary-color);
     border-radius: 50px;
     box-sizing: border-box;
+    cursor: pointer;
 }
 .switch_toggle{
     width: 30px;
@@ -89,7 +88,7 @@ h1, h2, h3, h4, h5, h6
 .alert{
     display: flex;
     flex-direction: column;
-    background-color: #00baf3;
+    background-color: var(--green-color);
     font-family: "Source Sans Pro", Arial, sans-serif;
     padding: 11px 30px;
     border-radius: 4px;
@@ -112,11 +111,11 @@ h1, h2, h3, h4, h5, h6
 }
 .alert_warning {
     color: #8a6d3b;
-    background-color: #fcf8e3;
-    border-color: #faebcc;
+    background-color: var(--warning-color);
+    border-color: var(--warning-color);
 }
 .alert_error {
-    background: #d14130;
+    background: var(--red-color);
     color: #fff;
 }
 .alert .close{
@@ -234,7 +233,7 @@ h1, h2, h3, h4, h5, h6
     flex-direction: column;
     overflow: hidden;
     width: 500px;
-    background-color: #fff;
+    background-color: var(--primary-background-color);
     border-radius: 4px;
     padding: .8em;
     box-shadow: 2px 2px 4px rgba(54, 56, 58, 0.6);
@@ -262,9 +261,10 @@ h1, h2, h3, h4, h5, h6
     color: #fff;
     padding: .4em .8em;
     border-radius: 4px;
-    box-shadow: 0 4px 8px var(--content-third-color);
+    box-shadow: 0 4px 8px var(--primary-background-color);
     cursor: pointer;
     transition: .3s box-shadow;
+    font-weight: 700;
 }
 .confirm_delete_container .actions .cancel
 {
@@ -329,6 +329,7 @@ h1, h2, h3, h4, h5, h6
     cursor: pointer;
     transition: .3s all;
     text-transform: uppercase;
+    font-weight: 700;
 }
 .add_comment .add_comment_btn:hover
 {
