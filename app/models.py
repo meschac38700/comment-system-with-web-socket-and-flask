@@ -52,7 +52,7 @@ DEFAULT_COMMENTS = [
             "author_lastname": "Doe",
             "added": "1594822846000",
             "id": 2,
-            "content": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur ratione omnis alias magnam? Consectetur, dignissimos! Officia debitis iste libero omnis porro facilis architecto! Officia corrupti cum vitae laborum minus exerci",
+            "content": "This is a demo to demonstrate the feedback feature i had to add to an open-source EsupPortail project called Esup-Pod.",
         },
     },
 ]
