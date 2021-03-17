@@ -6,12 +6,21 @@ Système de commentaire utilisant le webSocket sans persistance des données.
 
 Python >= v3.9
 
+## Demo
+https://comment-with-flask-websocket.herokuapp.com/
+
 ## Installation
 
 Cloner le projet
 
 ```bash
 git clone https://github.com/meschac38700/comment-system-with-web-socket-and-flask.git
+```
+
+Deplacez vous dans la branche 'local' si ce n'est pas déjà le cas
+
+```bash
+git checkout local
 ```
 
 Se placer dans le répertoire du projet
@@ -41,13 +50,13 @@ python -m venv {nom_environnement_virtuel}
 Activer l'environnement virtuel (Linux, Mac OS)
 
 ```bash
-source venv/bin/activate
+source {nom_environnement_virtuel}/bin/activate
 ```
 
 Activer l'environnement virtuel (Windows)
 
 ```bash
-bash ./venv/Script/activate
+bash ./{nom_environnement_virtuel}/Script/activate
 ```
 
 Utiliser le gestionnaire de dépendances [pip](https://pip.pypa.io/en/stable/) pour installer les dependances présentes dans le fichier requirements.txt.
@@ -56,13 +65,7 @@ Utiliser le gestionnaire de dépendances [pip](https://pip.pypa.io/en/stable/) p
 pip install -r requirements.txt
 ```
 
-## Usage
-
-Deplacez vous dans la branch local
-
-```bash
-git checkout local
-```
+## Lancer le programme
 
 Executer la commande suivante pour lancer le serveur:
 
