@@ -1,7 +1,7 @@
 # Système de commentaire avec Flask et le Web Socket
 
 Système de commentaire utilisant le webSocket.
-La persistance des données n'est que temporaire dû à la base de données sqlite et l'hébergeur Heroku.
+La persistance des données(demo) n'est que temporaire dû à la base de données sqlite et l'hébergeur Heroku.
 
 # Requirements
 
