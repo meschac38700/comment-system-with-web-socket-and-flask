@@ -57,7 +57,7 @@ source {nom_environnement_virtuel}/bin/activate
 Activer l'environnement virtuel (Windows)
 
 ```bash
-bash ./{nom_environnement_virtuel}/Scripts/activate.bat
+./{nom_environnement_virtuel}/Scripts/activate.bat
 ```
 
 Utiliser le gestionnaire de dépendances [pip](https://pip.pypa.io/en/stable/) pour installer les dependances présentes dans le fichier requirements.txt.
